@@ -1,9 +1,9 @@
-const http = require('http');
 const fs = require('fs');
 
-const server = http.createServer((req, res) => {
+const requestHandler = (req, res) => {
     const url = req.url;
     const method = req.method;
+    
     if(url === '/') {
         res.write('<html>');
         res.write('<head><title>Enter Message</title></head>');
@@ -19,16 +19,15 @@ const server = http.createServer((req, res) => {
             body.push(chunk);
         });
 
-        req.on('end', () => {
+        return req.on('end', () => {
             const parseBody = Buffer.concat(body).toString();
             const message = parseBody.split('=')[1];
-            fs.writeFileSync('message.txt', message)
+            fs.writeFile('message.txt', message, err => {
+                res.statusCode = 302;
+                res.setHeader('Location', '/');
+                return res.end();
+            });
         });
-
-        fs.writeFileSync('message.txt', 'DUMMY');
-        res.statusCode = 302;
-        res.setHeader('Location', '/');
-        return res.end();
     }
     //process.exit();
     res.setHeader('Contest-Type', 'text/html');
@@ -38,6 +37,6 @@ const server = http.createServer((req, res) => {
     res.write('</h1>');
     res.write('</html>');
     res.end();
-});
+}
 
-server.listen(3000)
+module.exports = requestHandler
