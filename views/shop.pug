@@ -1,22 +1,10 @@
-<!DOCTYPE html>
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        meta(http-equiv="X-UA-Compatible", content="ie=edge")
-        title #{docTitle}
-        link(rel="stylesheet", href="/css/shop.css")
-        link(rel="stylesheet", href="/css/add-product.css")
-    body
-        header.main-header
-            nav.main-header_nav
-                ul.main-header_item-list
-                    li.main-header_item
-                        a.active(href="/") Shop
-                    LI.main-header_item
-                        a(href="/admin/add-product") Add Product
-        main
-            if prods.length > 0
+extends layouts/main-layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/add-product.css")
+block content
+    main
+        if prods.length > 0
                 .grid 
                     each product in prods
                         article.card.product-item
@@ -29,7 +17,5 @@ html(lang="en")
                                 p.product_description A very interesting book about so many even more interesting things
                             .card_actions
                                 button.btn Add to Cart
-            else
-                h1 No Products
-
-
+        else
+            h1 No Products
